@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { email, setEmail, setUserName } = useUserStore();
+  const { email, setEmail, setUserName,setUserProfilePic } = useUserStore();
   const [loading, setLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
@@ -19,12 +19,14 @@ const SignIn = () => {
       console.log(result);
       const userEmail = result?.user?.email ?? "";
       const userName = result?.user?.displayName ?? "";
-
+      const userProfilePic = result?.user?.photoURL ?? "";
       setEmail(userEmail);
       setUserName(userName);
+      setUserProfilePic(userProfilePic);
 
       localStorage.setItem("user", JSON.stringify(userEmail));
       localStorage.setItem("userName", JSON.stringify(userName));
+      localStorage.setItem("userProfilePic", JSON.stringify(userProfilePic));
       navigate("/");
     } catch (error) {
       console.error("Error signing in:", error);
@@ -36,11 +38,14 @@ const SignIn = () => {
   useEffect(() => {
     const storedEmail = localStorage.getItem("user");
     const storedUserName = localStorage.getItem("userName");
-    if (storedEmail && storedUserName) {
+    const storedUserProfilePic = localStorage.getItem("userProfilePic");
+    if (storedEmail && storedUserName && storedUserProfilePic) {
       setEmail(storedEmail);
       setUserName(storedUserName);
+      setUserProfilePic(storedUserProfilePic);
+
     }
-  }, [setEmail, setUserName]);
+  }, [setEmail, setUserName, setUserProfilePic]);
 
   return (
     <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-lightPink py-6 pl-16">

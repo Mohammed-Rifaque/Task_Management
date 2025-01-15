@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Main from "./components/Main";
-import SignIn from "./components/googleSignIn/SignIn";
+import SignIn from "./components/auth/SignIn";
 
 const App = () => {
   const location = useLocation();
@@ -12,8 +12,8 @@ const App = () => {
 
   return (
     <>
-      {showNavbar && <Navbar />}
       <div className="container mx-auto mt-4">
+      {showNavbar && <Navbar />}
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/signin" element={<SignIn />} />

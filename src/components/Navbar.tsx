@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 const Navbar = () => {
   const navigate = useNavigate();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { logout, userName } = useUserStore();
+  const { logout, userName, userProfilePic } = useUserStore();
 
   const handleProfileClick = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -18,11 +18,11 @@ const Navbar = () => {
     logout();
     localStorage.removeItem("user");
     localStorage.removeItem("userName");
+    localStorage.removeItem("userProfilePic");
     navigate("/signin");
   };
-
   return (
-    <div className="flex justify-between items-center px-10 py-5 pt-8 bg-white">
+    <div className="flex justify-between items-center px-10 py-5 pt-7 bg-white">
       <div className="flex gap-3">
         <img src={taskBuddyLogo} alt="taskbuddyLogo" className="w-8 h-8" />
         <h1 className="text-2xl font-semibold text-black">TaskBuddy</h1>
@@ -31,7 +31,7 @@ const Navbar = () => {
       <div className="flex gap-3">
         <div className="relative">
           <div className="flex items-center gap-2 cursor-pointer" onClick={handleProfileClick}>
-            <img src={userProfile} alt="user profile" className="w-8 h-8 rounded-full cursor-pointer" />
+            <img src={userProfilePic || userProfile} alt="user profile" className="w-8 h-8 rounded-full cursor-pointer" />
             <span className="font-normal"> {userName.replace(/^"(.*)"$/, "$1")}</span>
           </div>
           {isDropdownOpen && (

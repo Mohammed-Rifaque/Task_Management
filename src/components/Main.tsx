@@ -1,10 +1,10 @@
 import React from "react";
-
+import Page from "./pages/Page";
 
 const Main = () => {
   return (
-    <div className="container mx-auto px-4">
-
+    <div className="px-10">
+      <Page />
     </div>
   );
 };
