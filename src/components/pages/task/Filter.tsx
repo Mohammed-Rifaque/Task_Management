@@ -2,7 +2,7 @@ import { FormControl, MenuItem, Select, Typography, TextField, InputAdornment } 
 import React from 'react'
 import SearchIcon from '@mui/icons-material/Search'
 import { SelectChangeEvent } from '@mui/material/Select'
-import useTaskStore from '../../../store/taskStore';
+import useTaskStore from '../../../store/useTaskStore';
 
 interface FilterProps {
   categoryFilter: string;

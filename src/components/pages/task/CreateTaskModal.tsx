@@ -3,7 +3,7 @@ import { Modal, TextField, Typography, ToggleButtonGroup, ToggleButton, MenuItem
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
-import useTaskStore from "../../../store/taskStore";
+import useTaskStore from "../../../store/useTaskStore";
 import { Close } from "@mui/icons-material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -37,6 +37,7 @@ const CreateTaskModal = () => {
   
     const newTask = {
       ...taskData,
+      id: Date.now(),
       dueDate: value ? value.toISOString() : "",
       category,
       status

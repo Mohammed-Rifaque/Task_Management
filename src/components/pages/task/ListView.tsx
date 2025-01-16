@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Paper, Table, TableHead, TableCell, TableContainer, TableRow, SelectChangeEvent, IconButton } from "@mui/material";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import useTaskStore from "../../../store/taskStore";
+import useTaskStore from "../../../store/useTaskStore";
 import Filter from "./Filter";
 import { SectionAccordion } from "./SectionAccordion";
 

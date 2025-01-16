@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { email, setEmail, setUserName,setUserProfilePic } = useUserStore();
+  const { setEmail, setUserName,setUserProfilePic } = useUserStore();
   const [loading, setLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {

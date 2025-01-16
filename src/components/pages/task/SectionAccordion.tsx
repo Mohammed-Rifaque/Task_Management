@@ -18,7 +18,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import useTaskStore from "../../../store/taskStore";
+import useTaskStore from "../../../store/useTaskStore";
 import AddIcon from "@mui/icons-material/Add";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
@@ -60,6 +60,7 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
   const handleAddTask = () => {
     if (taskTitle && value) {
       const newTask = {
+        id: Date.now(),
         title: taskTitle,
         dueDate: value.toISOString(),
         status: selectedStatus,

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import taskBuddyLogo from "./../assets/TaskBuddyLogo.svg";
-import userProfile from "./../assets/userProfile.svg";
+import userProfile from "./../assets/userProfile.png";
 import LogoutIcon from "./../assets/LogoutIcon.svg";
 import useUserStore from "../store/userStore";
 import { useNavigate } from "react-router-dom";
