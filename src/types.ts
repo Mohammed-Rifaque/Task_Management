@@ -1,8 +1,12 @@
 export interface Task {
-    id: string;
-    title: string;
-    description: string;
-    dueDate: string;
-    category: string;
-  }
-  
+  id: string;
+  title: string;
+  description: string;
+  dueDate: string;
+  category: string;
+  status: string;
+  attachment?: {
+    url?: string;
+    name?: string;
+  };
+}

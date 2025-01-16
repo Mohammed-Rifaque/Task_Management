@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { auth, provider } from "./config";
+import { auth, provider } from "../../config/config";
 import { signInWithPopup } from "firebase/auth";
 import useUserStore from "../../store/userStore";
 import circlesBg from "../../assets/circlesBg.png";
@@ -60,7 +60,6 @@ const SignIn = () => {
           </p>
         </div>
 
-        {!email && (
           <button
             onClick={handleGoogleSignIn}
             disabled={loading}
@@ -76,7 +75,6 @@ const SignIn = () => {
               </>
             )}
           </button>
-        )}
       </div>
 
       <div
