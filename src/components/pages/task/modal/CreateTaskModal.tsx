@@ -3,13 +3,13 @@ import { Modal, TextField, Typography, ToggleButtonGroup, ToggleButton, MenuItem
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { Dayjs } from "dayjs";
-import useTaskStore from "../../../store/useTaskStore";
+import useTaskStore from "../../../../store/useTaskStore";
 import { Close } from "@mui/icons-material";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 const CreateTaskModal = () => {
-  const { isModalOpen, closeModal, taskData, setTaskData, addTask } = useTaskStore();
+  const { isCreateModalOpen, closeCreateModal, taskData, setTaskData, addTask } = useTaskStore();
   const [value, setValue] = useState<Dayjs | null>(null);
   const [category, setCategory] = useState("");
   const [status, setStatus] = useState("");
@@ -62,20 +62,20 @@ const CreateTaskModal = () => {
     setCategory("");
     setStatus("");
     setIsSubmitted(false);
-    closeModal();
+    closeCreateModal();
   };
   
 
-  if (!isModalOpen) return null;
+  if (!isCreateModalOpen) return null;
 
   return (
-    <Modal open={isModalOpen} onClose={closeModal} className="flex items-center justify-center">
-      <div className="bg-white rounded-3xl shadow-lg w-full max-w-lg" style={{ maxWidth: "800px", width: "90%" }}>
+    <Modal open={isCreateModalOpen} onClose={closeCreateModal} className="flex items-center justify-center">
+      <div className="bg-white rounded-3xl shadow-lg w-full max-w-lg" style={{ maxWidth: "900px", width: "90%" }}>
         <div className="flex justify-between items-center p-4 border-b border-gray-300 rounded-t-3xl bg-white sticky top-0 z-10">
           <Typography variant="h6" className="text-center mb-4">
             Create Task
           </Typography>
-          <button onClick={closeModal} className="text-gray-500 hover:text-gray-700">
+          <button onClick={closeCreateModal} className="text-gray-500 hover:text-gray-700">
             <Close />
           </button>
         </div>
@@ -222,7 +222,7 @@ const CreateTaskModal = () => {
               {taskData.attachment ? (
                 <Typography variant="body2">{taskData.attachment.name}</Typography>
               ) : (
-                <Typography variant="body2">Drop your files here or update</Typography>
+                <Typography variant="body2">Drop your files here to upload</Typography>
               )}
             </label>
             {isSubmitted && !taskData.attachment && <Typography color="error">Attachment is required</Typography>}
@@ -245,7 +245,7 @@ const CreateTaskModal = () => {
         </div>
 
         <div className="flex justify-end bg-[#F1F1F1] p-4 rounded-b-3xl sticky bottom-0 z-10">
-          <button onClick={closeModal} className="bg-[#ffffff] border text-black text-sm font-medium px-7 py-3 rounded-3xl mr-2">
+          <button onClick={closeCreateModal} className="bg-[#ffffff] border text-black text-sm font-medium px-7 py-3 rounded-3xl mr-2">
             CANCEL
           </button>
           <button onClick={handleCreate} className="bg-[#7B1984] text-white text-sm font-medium px-7 py-3 rounded-3xl mr-2">

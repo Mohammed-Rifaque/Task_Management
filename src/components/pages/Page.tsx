@@ -4,7 +4,8 @@ import ListView from "./task/ListView";
 import { usePageTypeStore } from "../../store/usePageTypeStore";
 import ListIcon from "../../assets/ListIcon.svg";
 import BoardIcon from "../../assets/BoardIcon.svg";
-import CreateTaskModal from "./task/CreateTaskModal";
+import CreateTaskModal from "./task/modal/CreateTaskModal";
+import EditTaskModal from "./task/modal/EditTaskModal";
 
 const Page = () => {
   const pageType = usePageTypeStore((state) => state.pageType);
@@ -25,7 +26,7 @@ const Page = () => {
                 if (e.key === "Enter" || e.key === " ") handlePageType("list");
               }}
               className={`${
-                pageType === "list" ? "active border-b-2 text-gray-500 border-gray-500" : "border-transparent"
+                pageType === "list" ? "active border-b-2 text-gray-900 font-medium border-gray-500" : "border-transparent"
               } flex items-center justify-center rounded-t-lg hover:text-gray-500 hover:border-gray-500 dark:hover:text-gray-500 group`}>
               <img src={ListIcon} alt="List view icon" className="w-5 h-5" />
               <span className="mx-2">List</span>
@@ -38,7 +39,7 @@ const Page = () => {
                 if (e.key === "Enter" || e.key === " ") handlePageType("board");
               }}
               className={`${
-                pageType === "board" ? "active border-b-2 text-gray-500 border-gray-500" : "border-transparent"
+                pageType === "board" ? "active border-b-2 text-gray-900  font-medium  border-gray-500" : "border-transparent"
               } flex items-center justify-center rounded-t-lg hover:text-gray-500 hover:border-gray-500 dark:hover:text-gray-500 group`}>
               <img src={BoardIcon} alt="Board view icon" className="w-5 h-5" />
               <span className="mx-2">Board</span>
@@ -50,6 +51,7 @@ const Page = () => {
       {pageType === "list" && <ListView />}
       {pageType === "board" && <BoardView />}
       <CreateTaskModal />
+      <EditTaskModal />
     </div>
   );
 };

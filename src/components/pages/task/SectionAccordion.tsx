@@ -24,6 +24,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import EnterIcon from "../../../assets/enterIcon.svg";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 
 type SectionInterface = {
   status: string;
@@ -35,27 +36,22 @@ type SectionInterface = {
 };
 
 export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, backgroundColor, hoverColor }: SectionInterface) => {
+  const { openEditModal, deleteTask } = useTaskStore();
   const [value, setValue] = useState<Dayjs | null>(null);
   const [showAddRow, setShowAddRow] = useState(false);
   const [taskTitle, setTaskTitle] = useState<string>("");
-  // Refs for button elements
   const statusButtonRef = useRef<HTMLButtonElement | null>(null);
   const categoryButtonRef = useRef<HTMLButtonElement | null>(null);
-  const actionButtonRef = useRef<HTMLButtonElement | null>(null);
-  // States for controlling dropdown visibility
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [actionDropDown, setActionDropDown] = useState<{ [key: number]: boolean }>({});
 
-  const [actionDropDown, setActionDropDown] = useState<{ [key: string]: boolean }>({});
+  const actionButtonRefs = useRef<{ [key: number]: React.RefObject<HTMLButtonElement | null> }>({});
 
-  // Toggle functions for dropdowns
   const handleStatusClick = () => setStatusDropdownOpen((prev) => !prev);
   const handleCategoryClick = () => setCategoryDropdownOpen((prev) => !prev);
-  const handleActionClick = (index: number) => {
-    setActionDropDown({ [`action-${index}`]: true });
-  };
 
   const handleAddTask = () => {
     if (taskTitle && value) {
@@ -80,13 +76,28 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
     }
   };
 
-  const handleEdit = (index: number) => {
-    console.log(`Delete task at index: ${index}`);
+  const handleActionClick = (index: number) => {
+    setActionDropDown((prev) => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
   };
-  const handleDelete = (index: number) => {
-    console.log(`Delete task at index: ${index}`);
+
+  const handleEdit = (taskId: number) => {
+    setActionDropDown((prev) => {
+      const updatedDropDown = { ...prev };
+      Object.keys(updatedDropDown).forEach((key) => {
+        updatedDropDown[Number(key)] = false;
+      });
+      return updatedDropDown;
+    });
+    openEditModal(taskId);
   };
-  // Functions to handle selecting values
+
+  const handleDelete = (taskId: number) => {
+    deleteTask(taskId);
+  };
+
   const handleStatusSelect = (status: string) => {
     setSelectedStatus(status);
     setStatusDropdownOpen(false);
@@ -167,26 +178,14 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
                             </Typography>
                           ) : (
                             <Button className="flex items-center" onClick={handleStatusClick} ref={statusButtonRef}>
-                              <AddIcon
-                                sx={{
-                                  color: "black",
-                                  border: "1px solid gray",
-                                  borderRadius: "32px",
-                                  padding: "4px 0px"
-                                }}
-                              />
+                              <AddIcon sx={{ color: "black", border: "1px solid gray", borderRadius: "32px", padding: "4px 0px" }} />
                             </Button>
                           )}
-
                           <Menu
                             open={statusDropdownOpen}
                             onClose={() => setStatusDropdownOpen(false)}
                             anchorEl={statusButtonRef.current}
-                            sx={{
-                              "& .MuiPaper-root": {
-                                borderRadius: "12px"
-                              }
-                            }}
+                            sx={{ "& .MuiPaper-root": { borderRadius: "12px" } }}
                             anchorOrigin={{
                               vertical: "bottom",
                               horizontal: "left"
@@ -210,26 +209,14 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
                             </Typography>
                           ) : (
                             <Button className="flex items-center" onClick={handleCategoryClick} ref={categoryButtonRef}>
-                              <AddIcon
-                                sx={{
-                                  color: "black",
-                                  border: "1px solid gray",
-                                  borderRadius: "32px",
-                                  padding: "4px 0px"
-                                }}
-                              />
+                              <AddIcon sx={{ color: "black", border: "1px solid gray", borderRadius: "32px", padding: "4px 0px" }} />
                             </Button>
                           )}
-
                           <Menu
                             open={categoryDropdownOpen}
                             onClose={() => setCategoryDropdownOpen(false)}
                             anchorEl={categoryButtonRef.current}
-                            sx={{
-                              "& .MuiPaper-root": {
-                                borderRadius: "12px"
-                              }
-                            }}
+                            sx={{ "& .MuiPaper-root": { borderRadius: "12px" } }}
                             anchorOrigin={{
                               vertical: "bottom",
                               horizontal: "left"
@@ -267,65 +254,67 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
                 </>
               )}
               {tasks.length > 0 ? (
-                tasks.map((task, index) => (
-                  <TableRow key={index} className="hover:bg-gray-200">
-                    <TableCell sx={{ width: "30%" }}>
-                      <Checkbox />
-                      {task.title}
-                    </TableCell>
-                    <TableCell sx={{ width: "20%" }}>{new Date(task.dueDate).toLocaleDateString()}</TableCell>
-                    <TableCell sx={{ width: "20%" }}>
-                      <Button sx={{ background: "#DDDADD", color: "black" }}>{task.status}</Button>
-                    </TableCell>
-                    <TableCell sx={{ width: "20%" }}>{task.category}</TableCell>
+                tasks.map((task, index) => {
+                  if (!actionButtonRefs.current[index]) {
+                    actionButtonRefs.current[index] = React.createRef();
+                  }
+                  return (
+                    <TableRow key={task.id} className="hover:bg-gray-200">
+                      <TableCell sx={{ width: "30%" }}>
+                        <div className="flex gap-2  items-center">
+                          <Checkbox
+                            sx={{
+                              "&.Mui-checked": {
+                                color: "#7B1984"
+                              }
+                            }}
+                          />
+                          <CheckCircleRoundedIcon className={`${task.status === "COMPLETED" ? "text-green-600" : "text-gray-400"}`} />
+                          <p className={`${task.status === "COMPLETED" && "line-through font-bold text-gray-700"}`}>{task.title}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell sx={{ width: "20%" }}>
+                        {new Date(task.dueDate).toDateString() === new Date().toDateString()
+                          ? "Today"
+                          : new Date(task.dueDate).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
+                      </TableCell>
+                      <TableCell sx={{ width: "20%" }}>
+                        <Button sx={{ background: "#DDDADD", color: "black" }}>{task.status}</Button>
+                      </TableCell>
+                      <TableCell sx={{ width: "20%" }}>{task.category}</TableCell>
 
-                    <TableCell sx={{ width: "10%" }}>
-                      <Typography onClick={() => handleActionClick(index)} ref={actionButtonRef}>
-                        <MoreHorizIcon />
-                      </Typography>
-                      <Menu
-                        open={actionDropDown[index]}
-                        onClose={() => setActionDropDown({ ...actionDropDown, [index]: false })}
-                        anchorEl={actionButtonRef.current}
-                        sx={{
-                          "& .MuiPaper-root": {
-                            borderRadius: "12px"
-                          }
-                        }}
-                        anchorOrigin={{
-                          vertical: "bottom",
-                          horizontal: "left"
-                        }}
-                        transformOrigin={{
-                          vertical: "top",
-                          horizontal: "left"
-                        }}>
-                        <MenuItem
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleEdit(index);
+                      <TableCell sx={{ width: "10%" }}>
+                        <Typography onClick={() => handleActionClick(index)}>
+                          <Button ref={actionButtonRefs.current[index]}>
+                            <MoreHorizIcon className="text-gray-500" />
+                          </Button>
+                        </Typography>
+                        <Menu
+                          open={actionDropDown[index]}
+                          onClose={() => setActionDropDown((prev) => ({ ...prev, [index]: false }))}
+                          anchorEl={actionButtonRefs.current[index]?.current}
+                          sx={{ "& .MuiPaper-root": { borderRadius: "12px" } }}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "left"
+                          }}
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "left"
                           }}>
-                          Edit
-                        </MenuItem>
-                        <MenuItem
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            handleDelete(index);
-                          }}>
-                          Delete
-                        </MenuItem>
-                      </Menu>
-                    </TableCell>
-                  </TableRow>
-                ))
+                          <MenuItem onClick={() => handleEdit(task.id)}>Edit</MenuItem>
+                          <MenuItem onClick={() => handleDelete(task.id)}>Delete</MenuItem>
+                        </Menu>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               ) : (
-                <>
-                  <TableRow>
-                    <TableCell colSpan={5} sx={{ textAlign: "center", height: "200px" }}>
-                      No Tasks in {status}
-                    </TableCell>
-                  </TableRow>
-                </>
+                <TableRow>
+                  <TableCell colSpan={5} sx={{ textAlign: "center", height: "200px" }}>
+                    No Tasks in {status}
+                  </TableCell>
+                </TableRow>
               )}
             </TableBody>
           </Table>

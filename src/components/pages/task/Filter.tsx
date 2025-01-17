@@ -22,7 +22,7 @@ const Filter: React.FC<FilterProps> = ({
   handleDueDateChange,
   handleSearchChange,
 }) => {
-  const { openModal } = useTaskStore();  
+  const { openCreateModal } = useTaskStore();  
 
   return (
     <div className="flex items-center justify-between mb-4">
@@ -108,7 +108,7 @@ const Filter: React.FC<FilterProps> = ({
             ),
           }}
         />
-        <button className="bg-[#7B1984] hover:bg-purple-700 text-white rounded-full px-8 py-3 text-sm"  onClick={openModal} >
+        <button className="bg-[#7B1984] hover:bg-purple-700 text-white rounded-full px-8 py-3 text-sm"  onClick={openCreateModal} >
           ADD TASK
         </button>
       </div>
