@@ -27,7 +27,7 @@ const SignIn = () => {
       localStorage.setItem("user", JSON.stringify(userEmail));
       localStorage.setItem("userName", JSON.stringify(userName));
       localStorage.setItem("userProfilePic", JSON.stringify(userProfilePic));
-      navigate("/");
+        navigate("/");
     } catch (error) {
       console.error("Error signing in:", error);
     } finally {
@@ -48,38 +48,40 @@ const SignIn = () => {
   }, [setEmail, setUserName, setUserProfilePic]);
 
   return (
-    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-lightPink py-6 pl-16">
-      <div className="w-full lg:w-1/3">
-        <div className="w-80 flex flex-col items-start">
+    <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-lightPink py-6 px-4 lg:px-16">
+      <div className="w-full lg:w-1/3 text-center lg:text-left">
+        <div className="w-80 flex flex-col items-center lg:items-start mb-8">
           <div className="flex gap-2 items-center justify-center mb-2">
-            <img src={taskImg} alt="task" className="w-8 h-8" />
+            <img src={taskImg} alt="TaskBuddy Logo" className="w-8 h-8" />
             <h1 className="text-3xl font-semibold text-[#7B1984]">TaskBuddy</h1>
           </div>
-          <p className="text-start text-gray-950 font-medium text-sm mb-6">
-            {"Streamline your workflow and manage tasks efficiently with an all-in-one tool."}
+          <p className="text-gray-950 font-medium text-sm mb-6 px-2 lg:px-0">
+            Streamline your workflow and manage tasks efficiently with an all-in-one tool.
           </p>
         </div>
 
-          <button
-            onClick={handleGoogleSignIn}
-            disabled={loading}
-            className={`flex items-center justify-center px-16 py-3 bg-[#292929] text-white font-medium text-sm rounded-2xl shadow transition ${
-              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
-            }`}>
-            {loading ? (
-              "Signing In..."
-            ) : (
-              <>
-                <img src={googleIcon} alt="googleIcon" className="mr-2" />
-                <span className="text-lg"> Continue with Google</span>
-              </>
-            )}
-          </button>
+        <button
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+          className={`flex items-center justify-center px-8 py-3 bg-[#292929] text-white font-medium text-sm rounded-2xl shadow transition w-full max-w-xs  ${
+            loading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-600"
+          }`}
+        >
+          {loading ? (
+            "Signing In..."
+          ) : (
+            <>
+              <img src={googleIcon} alt="Google Icon" className="mr-2 w-5 h-5" />
+              <span className="text-lg">Continue with Google</span>
+            </>
+          )}
+        </button>
       </div>
 
       <div
-        className="w-full lg:w-2/3 bg-contain bg-no-repeat	 bg-center min-h-[calc(100vh-100px)] "
-        style={{ backgroundImage: `url(${circlesBg})` }}></div>
+        className="w-full lg:w-2/3 bg-contain bg-no-repeat bg-center min-h-[calc(100vh-100px)]"
+        style={{ backgroundImage: `url(${circlesBg})` }}
+      ></div>
     </div>
   );
 };
