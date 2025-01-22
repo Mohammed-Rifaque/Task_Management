@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { auth, provider } from "../../config/config";
+import { auth, provider } from "../../config/config"; 
 import { signInWithPopup } from "firebase/auth";
 import useUserStore from "../../store/userStore";
 import circlesBg from "../../assets/circlesBg.png";
@@ -9,27 +9,32 @@ import { useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const { setEmail, setUserName,setUserProfilePic } = useUserStore();
+  const { setEmail, setUserName, setUserProfilePic } = useUserStore();
   const [loading, setLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
       const result = await signInWithPopup(auth, provider);
-      console.log(result);
-      const userEmail = result?.user?.email ?? "";
-      const userName = result?.user?.displayName ?? "";
-      const userProfilePic = result?.user?.photoURL ?? "";
-      setEmail(userEmail);
-      setUserName(userName);
-      setUserProfilePic(userProfilePic);
+      const user = result?.user;
+      if (user) {
+        const userEmail = user.email ?? "";
+        const userName = user.displayName ?? "";
+        const userProfilePic = user.photoURL ?? "";
 
-      localStorage.setItem("user", JSON.stringify(userEmail));
-      localStorage.setItem("userName", JSON.stringify(userName));
-      localStorage.setItem("userProfilePic", JSON.stringify(userProfilePic));
-        navigate("/");
+        setEmail(userEmail);
+        setUserName(userName);
+        setUserProfilePic(userProfilePic);
+
+        localStorage.setItem("user", userEmail);
+        localStorage.setItem("userName", userName);
+        localStorage.setItem("userProfilePic", userProfilePic);
+
+        navigate("/"); 
+      }
     } catch (error) {
       console.error("Error signing in:", error);
+      alert("Failed to sign in, please try again.");
     } finally {
       setLoading(false);
     }
@@ -43,9 +48,9 @@ const SignIn = () => {
       setEmail(storedEmail);
       setUserName(storedUserName);
       setUserProfilePic(storedUserProfilePic);
-
+      navigate("/"); // Redirect if user is already signed in
     }
-  }, [setEmail, setUserName, setUserProfilePic]);
+  }, [setEmail, setUserName, setUserProfilePic, navigate]);
 
   return (
     <div className="flex flex-col lg:flex-row items-center justify-center min-h-screen bg-lightPink py-6 px-4 lg:px-16">
@@ -61,6 +66,7 @@ const SignIn = () => {
         </div>
 
         <button
+          aria-label="Sign in with Google"
           onClick={handleGoogleSignIn}
           disabled={loading}
           className={`flex items-center justify-center px-8 py-3 bg-[#292929] text-white font-medium text-sm rounded-2xl shadow transition w-full max-w-xs  ${
