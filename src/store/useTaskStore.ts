@@ -96,12 +96,12 @@ const useTaskStore = create<Store>((set, get) => ({
         return { tasks: [...state.tasks, { ...task, id: Date.now() }] };
       }
     }),
-    updateTask: (updatedTask) =>
-      set((state) => ({
-        tasks: state.tasks.map((task) =>
-          task.id === updatedTask.id ? updatedTask : task
-        ),
-      })),
+  updateTask: (updatedTask) =>
+    set((state) => ({
+      tasks: state.tasks.map((task) =>
+        task.id === updatedTask.id ? updatedTask : task
+      ),
+    })),
   deleteTask: (taskId) =>
     set((state) => ({
       tasks: state.tasks.filter((task) => task.id !== taskId),

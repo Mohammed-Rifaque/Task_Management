@@ -1,8 +1,8 @@
-import { FormControl, MenuItem, Select, Typography, TextField, InputAdornment } from '@mui/material'
-import React from 'react'
-import SearchIcon from '@mui/icons-material/Search'
-import { SelectChangeEvent } from '@mui/material/Select'
-import useTaskStore from '../../../store/useTaskStore';
+import React from "react";
+import { FormControl, MenuItem, Select, Typography, TextField, InputAdornment } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
+import { SelectChangeEvent } from "@mui/material/Select";
+import useTaskStore from "../../../store/useTaskStore";
 
 interface FilterProps {
   categoryFilter: string;
@@ -20,9 +20,36 @@ const Filter: React.FC<FilterProps> = ({
   searchQuery,
   handleCategoryChange,
   handleDueDateChange,
-  handleSearchChange,
+  handleSearchChange
 }) => {
-  const { openCreateModal } = useTaskStore();  
+  const openCreateModal = useTaskStore((state) => state.openCreateModal); // Use the store function
+  const tasks = useTaskStore((state) => state.tasks); // Get tasks from the store
+
+  // Helper function to check if the date is in the current week
+  const isThisWeek = (date: Date) => {
+    const now = new Date();
+    const startOfWeek = now.getDate() - now.getDay(); // start of this week (Sunday)
+    const endOfWeek = startOfWeek + 6; // end of this week (Saturday)
+    
+    const start = new Date(now.setDate(startOfWeek));
+    const end = new Date(now.setDate(endOfWeek));
+    
+    return date >= start && date <= end;
+  };
+
+  // Apply filters here
+  const filteredTasks = tasks.filter((task) => {
+    const matchesCategory = categoryFilter ? task.category === categoryFilter : true;
+    const matchesDueDate =
+      dueDateFilter
+        ? dueDateFilter === "Today"
+          ? new Date(task.dueDate).toDateString() === new Date().toDateString()
+          : dueDateFilter === "This Week" && isThisWeek(new Date(task.dueDate))
+        : true;
+    const matchesSearchQuery = task.title.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesCategory && matchesDueDate && matchesSearchQuery;
+  });
 
   return (
     <div className="flex items-center justify-between mb-4">
@@ -31,7 +58,7 @@ const Filter: React.FC<FilterProps> = ({
         <Typography variant="body1" className="mr-2">
           Filter by:
         </Typography>
-        
+
         {/* Category Filter */}
         <FormControl variant="outlined" className="mr-2 w-32">
           <Select
@@ -43,11 +70,11 @@ const Filter: React.FC<FilterProps> = ({
               borderRadius: "32px",
               padding: "4px",
               "& .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "32px",
+                borderRadius: "32px"
               },
               "& .MuiOutlinedInput-input": {
-                padding: "6px 8px",
-              },
+                padding: "6px 8px"
+              }
             }}
           >
             <MenuItem value="">
@@ -69,11 +96,11 @@ const Filter: React.FC<FilterProps> = ({
               borderRadius: "32px",
               padding: "4px",
               "& .MuiOutlinedInput-notchedOutline": {
-                borderRadius: "32px",
+                borderRadius: "32px"
               },
               "& .MuiOutlinedInput-input": {
-                padding: "6px 8px",
-              },
+                padding: "6px 8px"
+              }
             }}
           >
             <MenuItem value="">
@@ -97,23 +124,26 @@ const Filter: React.FC<FilterProps> = ({
           sx={{
             borderRadius: "24px",
             "& .MuiOutlinedInput-root": {
-              borderRadius: "24px",
-            },
+              borderRadius: "24px"
+            }
           }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
                 <SearchIcon />
               </InputAdornment>
-            ),
+            )
           }}
         />
-        <button className="bg-[#7B1984] hover:bg-purple-700 text-white rounded-full px-8 py-3 text-sm"  onClick={openCreateModal} >
+        <button
+          className="bg-[#7B1984] hover:bg-purple-700 text-white rounded-full px-8 py-3 text-sm"
+          onClick={openCreateModal} 
+        >
           ADD TASK
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Filter
+export default Filter;

@@ -35,8 +35,11 @@ const ListView = () => {
     });
   };
 
-  const handleAccordionChange = (section: string) => {
-    setExpanded({ ...expanded, [section]: !expanded[section] });
+  const handleAccordionChange = (status: string) => {
+    setExpanded((prevExpanded) => ({
+      ...prevExpanded,
+      [status]: !prevExpanded[status] // Dynamically toggle the expansion based on status
+    }));
   };
 
   const handleCategoryChange = (event: SelectChangeEvent<string>) => {
@@ -62,7 +65,7 @@ const ListView = () => {
       return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
     });
   };
-console.log(tasks,"tasks")
+
   return (
     <div className="min-h-screen">
       <Filter
@@ -127,31 +130,33 @@ console.log(tasks,"tasks")
             </TableRow>
           </TableHead>
         </Table>
-        <SectionAccordion
-          status="To-Do"
-          tasks={sortTasks(filteredTasks("TO-DO"))}
-          expanded={expanded.todo}
-          onAccordionChange={() => handleAccordionChange("todo")}
-          backgroundColor="#FAC3FF"
-          hoverColor="#BB70C2"
-        />
-        <SectionAccordion
-          status="In-Progress"
-          tasks={sortTasks(filteredTasks("IN-PROGRESS"))}
-          expanded={expanded.inProgress}
-          onAccordionChange={() => handleAccordionChange("inProgress")}
-          backgroundColor="#85D9F1"
-          hoverColor="#67A0B1"
-        />
-        <SectionAccordion
-          status="Completed"
-          tasks={sortTasks(filteredTasks("COMPLETED"))}
-          expanded={expanded.completed}
-          onAccordionChange={() => handleAccordionChange("completed")}
-          backgroundColor="#CEFFCC"
-          hoverColor="#A0D59E"
-        />
       </TableContainer>
+
+      {/* Section Accordion */}
+      <SectionAccordion
+          status="To-Do"
+          expanded={expanded.todo}
+        tasks={sortTasks(filteredTasks("TO-DO"))}
+        onAccordionChange={() => handleAccordionChange("todo")}
+        backgroundColor="#FAC3FF"
+        hoverColor="#BB70C2"
+      />
+      <SectionAccordion
+          status="In-Progress"
+          expanded={expanded.inProgress}
+        tasks={sortTasks(filteredTasks("IN-PROGRESS"))}
+        onAccordionChange={() => handleAccordionChange("inProgress")}
+        backgroundColor="#85D9F1"
+        hoverColor="#67A0B1"
+      />
+      <SectionAccordion
+          status="Completed"
+        expanded={expanded.completed}
+        tasks={sortTasks(filteredTasks("COMPLETED"))}
+        onAccordionChange={() => handleAccordionChange("completed")}
+        backgroundColor="#CEFFCC"
+        hoverColor="#A0D59E"
+      />
     </div>
   );
 };
