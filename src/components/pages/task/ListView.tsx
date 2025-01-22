@@ -134,23 +134,23 @@ const ListView = () => {
 
       {/* Section Accordion */}
       <SectionAccordion
-          status="To-Do"
-          expanded={expanded.todo}
+        status="To-Do"
+        expanded={expanded.todo}
         tasks={sortTasks(filteredTasks("TO-DO"))}
         onAccordionChange={() => handleAccordionChange("todo")}
         backgroundColor="#FAC3FF"
         hoverColor="#BB70C2"
       />
       <SectionAccordion
-          status="In-Progress"
-          expanded={expanded.inProgress}
+        status="In-Progress"
+        expanded={expanded.inProgress}
         tasks={sortTasks(filteredTasks("IN-PROGRESS"))}
         onAccordionChange={() => handleAccordionChange("inProgress")}
         backgroundColor="#85D9F1"
         hoverColor="#67A0B1"
       />
       <SectionAccordion
-          status="Completed"
+        status="Completed"
         expanded={expanded.completed}
         tasks={sortTasks(filteredTasks("COMPLETED"))}
         onAccordionChange={() => handleAccordionChange("completed")}

@@ -35,6 +35,7 @@ interface Store {
   addTask: (task: Task) => void;
   updateTask: (updatedTask: Task) => void;
   deleteTask: (taskId: number) => void;
+  deleteTasks: (taskIds: number[]) => void; // Added method
   updateTaskStatus: (taskId: number, newStatus: string) => void;
 
   // Filter actions
@@ -105,6 +106,10 @@ const useTaskStore = create<Store>((set, get) => ({
   deleteTask: (taskId) =>
     set((state) => ({
       tasks: state.tasks.filter((task) => task.id !== taskId),
+    })),
+  deleteTasks: (taskIds: number[]) =>
+    set((state) => ({
+      tasks: state.tasks.filter((task) => !taskIds.includes(task.id)),
     })),
   updateTaskStatus: (taskId, newStatus) =>
     set((state) => ({
