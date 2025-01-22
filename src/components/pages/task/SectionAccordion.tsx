@@ -41,7 +41,6 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
   const [value, setValue] = useState<Dayjs | null>(null);
   const [showAddRow, setShowAddRow] = useState(false);
   const [taskTitle, setTaskTitle] = useState<string>("");
-  const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
   const statusButtonRef = useRef<HTMLButtonElement | null>(null);
   const categoryButtonRef = useRef<HTMLButtonElement | null>(null);
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
@@ -49,6 +48,7 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
   const [selectedStatus, setSelectedStatus] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [actionDropDown, setActionDropDown] = useState<{ [key: number]: boolean }>({});
+  const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
 
   const actionButtonRefs = useRef<{ [key: number]: React.RefObject<HTMLButtonElement | null> }>({});
 
@@ -96,17 +96,6 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
     openEditModal(taskId);
   };
 
-  const handleCheckboxChange = (taskId: number) => {
-    setSelectedTasks((prevSelected) =>
-      prevSelected.includes(taskId) ? prevSelected.filter((id) => id !== taskId) : [...prevSelected, taskId]
-    );
-  };
-
-  const handleDeleteSelected = () => {
-    useTaskStore.getState().deleteTasks(selectedTasks);
-    setSelectedTasks([]);
-  };
-
   const handleDelete = (taskId: number) => {
     deleteTask(taskId);
   };
@@ -120,7 +109,16 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
     setSelectedCategory(category);
     setCategoryDropdownOpen(false);
   };
+  const handleCheckboxChange = (taskId: number) => {
+    setSelectedTasks((prevSelected) =>
+      prevSelected.includes(taskId) ? prevSelected.filter((id) => id !== taskId) : [...prevSelected, taskId]
+    );
+  };
 
+  const handleDeleteSelected = () => {
+    useTaskStore.getState().deleteTasks(selectedTasks);
+    setSelectedTasks([]);
+  };
   return (
     <>
       <TableContainer component={Paper} className="mb-6 shadow-md" sx={{ borderRadius: "16px" }}>
@@ -272,54 +270,59 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
                   </>
                 )}
                 {tasks.length > 0 ? (
-                  tasks.map((task, index) => (
-                    <TableRow key={task.id} className="hover:bg-gray-200">
-                      <TableCell sx={{ width: "30%" }}>
-                        <div className="flex gap-2 items-center">
-                          <Checkbox
-                            checked={selectedTasks.includes(task.id)}
-                            onChange={() => handleCheckboxChange(task.id)}
-                            sx={{ "&.Mui-checked": { color: "#7B1984" } }}
-                          />
-                          <CheckCircleRoundedIcon className={`${task.status === "COMPLETED" ? "text-green-600" : "text-gray-400"}`} />
-                          <p className={`${task.status === "COMPLETED" && "line-through font-bold text-gray-700"}`}>{task.title}</p>
-                        </div>
-                      </TableCell>
-                      <TableCell sx={{ width: "20%" }}>
-                        {new Date(task.dueDate).toDateString() === new Date().toDateString()
-                          ? "Today"
-                          : new Date(task.dueDate).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
-                      </TableCell>
-                      <TableCell sx={{ width: "20%" }}>
-                        <Button sx={{ background: "#DDDADD", color: "black" }}>{task.status}</Button>
-                      </TableCell>
-                      <TableCell sx={{ width: "20%" }}>{task.category}</TableCell>
+                  tasks.map((task, index) => {
+                    if (!actionButtonRefs.current[index]) {
+                      actionButtonRefs.current[index] = React.createRef();
+                    }
+                    return (
+                      <TableRow key={task.id} className="hover:bg-gray-200">
+                        <TableCell sx={{ width: "30%" }}>
+                          <div className="flex gap-2  items-center">
+                            <Checkbox
+                              checked={selectedTasks.includes(task.id)}
+                              onChange={() => handleCheckboxChange(task.id)}
+                              sx={{ "&.Mui-checked": { color: "#7B1984" } }}
+                            />
+                            <CheckCircleRoundedIcon className={`${task.status === "COMPLETED" ? "text-green-600" : "text-gray-400"}`} />
+                            <p className={`${task.status === "COMPLETED" && "line-through font-bold text-gray-700"}`}>{task.title}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell sx={{ width: "20%" }}>
+                          {new Date(task.dueDate).toDateString() === new Date().toDateString()
+                            ? "Today"
+                            : new Date(task.dueDate).toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" })}
+                        </TableCell>
+                        <TableCell sx={{ width: "20%" }}>
+                          <Button sx={{ background: "#DDDADD", color: "black" }}>{task.status}</Button>
+                        </TableCell>
+                        <TableCell sx={{ width: "20%" }}>{task.category}</TableCell>
 
-                      <TableCell sx={{ width: "10%" }}>
-                        <Typography onClick={() => handleActionClick(index)}>
-                          <Button ref={actionButtonRefs.current[index]}>
-                            <MoreHorizIcon className="text-gray-500" />
-                          </Button>
-                        </Typography>
-                        <Menu
-                          open={actionDropDown[index]}
-                          onClose={() => setActionDropDown((prev) => ({ ...prev, [index]: false }))}
-                          anchorEl={actionButtonRefs.current[index]?.current}
-                          sx={{ "& .MuiPaper-root": { borderRadius: "12px" } }}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "left"
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "left"
-                          }}>
-                          <MenuItem onClick={() => handleEdit(task.id)}>Edit</MenuItem>
-                          <MenuItem onClick={() => handleDelete(task.id)}>Delete</MenuItem>
-                        </Menu>
-                      </TableCell>
-                    </TableRow>
-                  ))
+                        <TableCell sx={{ width: "10%" }}>
+                          <Typography onClick={() => handleActionClick(index)}>
+                            <Button ref={actionButtonRefs.current[index]}>
+                              <MoreHorizIcon className="text-gray-500" />
+                            </Button>
+                          </Typography>
+                          <Menu
+                            open={actionDropDown[index]}
+                            onClose={() => setActionDropDown((prev) => ({ ...prev, [index]: false }))}
+                            anchorEl={actionButtonRefs.current[index]?.current}
+                            sx={{ "& .MuiPaper-root": { borderRadius: "12px" } }}
+                            anchorOrigin={{
+                              vertical: "bottom",
+                              horizontal: "left"
+                            }}
+                            transformOrigin={{
+                              vertical: "top",
+                              horizontal: "left"
+                            }}>
+                            <MenuItem onClick={() => handleEdit(task.id)}>Edit</MenuItem>
+                            <MenuItem onClick={() => handleDelete(task.id)}>Delete</MenuItem>
+                          </Menu>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })
                 ) : (
                   <TableRow>
                     <TableCell colSpan={5} sx={{ textAlign: "center", height: "200px" }}>
