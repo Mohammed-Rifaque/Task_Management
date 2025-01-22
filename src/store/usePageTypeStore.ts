@@ -1,17 +1,13 @@
 import { create } from "zustand";
 
+type PageType = "list" | "board";
+
 interface PageTypeStore {
-  pageType: string;
-  setPageType: (pageType: string) => void;
+  pageType: PageType;
+  setPageType: (pageType: PageType) => void;
 }
 
-export const usePageTypeStore = create<PageTypeStore>()((set) => ({
-  pageType: "list",
-  setPageType: (pageType) =>
-    set((state) => {
-      return {
-        ...state,
-        pageType: pageType
-      };
-    })
+export const usePageTypeStore = create<PageTypeStore>((set) => ({
+  pageType: "list", 
+  setPageType: (pageType) => set({ pageType }),
 }));
