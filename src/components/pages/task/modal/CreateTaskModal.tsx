@@ -43,13 +43,10 @@ const CreateTaskModal = () => {
       status
     };
   
-    // Log the new task to the console for debugging
     console.log("Creating New Task: ", newTask);
   
-    // Add task to the store
     addTask(newTask);
   
-    // Clear form and reset states
     setTaskData({
       title: "",
       description: "",
@@ -64,7 +61,18 @@ const CreateTaskModal = () => {
     setIsSubmitted(false);
     closeCreateModal();
   };
-  
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files ? e.dataTransfer.files[0] : null;
+    if (file) {
+      setTaskData({ attachment: file });
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+  };
 
   if (!isCreateModalOpen) return null;
 
@@ -207,7 +215,11 @@ const CreateTaskModal = () => {
 
           <div className="flex flex-col mb-4">
             <Typography className="mb-2">Attachment</Typography>
-            <label className="border border-gray-300 bg-[#F1F1F1] rounded-lg p-4 text-center cursor-pointer hover:border-blue-600 transition">
+            <label
+              className="border border-gray-300 bg-[#F1F1F1] rounded-lg p-4 text-center cursor-pointer hover:border-blue-600 transition"
+              onDrop={handleDrop}
+              onDragOver={handleDragOver}
+            >
               <input
                 type="file"
                 className="hidden"
