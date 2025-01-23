@@ -337,15 +337,21 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
       </TableContainer>
       {selectedTasks.length > 0 && (
         <div className="fixed z-10 bottom-0 mb-2 left-0 right-0 w-full text-white flex justify-center items-center">
-          <div className="flex justify-between items-center w-1/3 bg-gray-800 px-4 py-3 rounded-2xl">
+          <div className="flex justify-between items-center w-1/3 bg-[#1A1C20] px-4 py-4 rounded-2xl flex-wrap">
             <div className="flex gap-2 items-center">
               <div className="border rounded-3xl px-4 py-3">{selectedTasks.length} tasks selected</div>
-              <img src={TasksSelectIcon} alt="selectedIcon" className="w-4" />
+              <img src={TasksSelectIcon} alt="selectedIcon" className="w-8" />
             </div>
             <div className="flex gap-4">
               {selectedStatus ? (
                 <Typography>
-                  <Button sx={{ background: "#DDDADD", color: "black" }} onClick={handleStatusClick} ref={statusButtonRef}>
+                  <Button
+                    className="flex items-center"
+                    style={{ border: "1px solid white", color: "white" }}
+                    variant="outlined"
+                    sx={{ borderRadius: "32px", padding: "6px 16px" }}
+                    onClick={handleStatusClick}
+                    ref={statusButtonRef}>
                     {selectedStatus}
                   </Button>
                 </Typography>
@@ -364,13 +370,13 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
                 open={statusDropdownOpen}
                 onClose={() => setStatusDropdownOpen(false)}
                 anchorEl={statusButtonRef.current}
-                sx={{ "& .MuiPaper-root": { borderRadius: "12px" } }}
+                sx={{ top:"-5%", "& .MuiPaper-root": { borderRadius: "12px", background: "#1A1C20", color: "white", } }}
                 anchorOrigin={{
-                  vertical: "bottom",
+                  vertical: "top",
                   horizontal: "left"
                 }}
                 transformOrigin={{
-                  vertical: "top",
+                  vertical: "bottom",
                   horizontal: "left"
                 }}>
                 <MenuItem onClick={() => handleStatusSelect("TO-DO")}>TO-DO</MenuItem>

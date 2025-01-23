@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
@@ -143,6 +143,9 @@ const BoardView = () => {
     "IN-PROGRESS": tasks.filter((task) => task.status === "IN-PROGRESS"),
     COMPLETED: tasks.filter((task) => task.status === "COMPLETED")
   });
+  useEffect(() => {
+    console.log("Tasks updated:", tasks);
+  }, [tasks]);
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
