@@ -42,23 +42,30 @@ const CreateTaskModal = () => {
       category,
       status
     };
-  
-    console.log("Creating New Task: ", newTask);
-  
+
     addTask(newTask);
-  
+
+    resetForm();
+    closeCreateModal();
+  };
+
+  const resetForm = () => {
     setTaskData({
       title: "",
       description: "",
       category: "Work",
       dueDate: "",
       status: "",
-      attachment: null
+      attachment: null,
     });
     setValue(null);
     setCategory("");
     setStatus("");
     setIsSubmitted(false);
+  };
+
+  const handleCloseModal = () => {
+    resetForm();
     closeCreateModal();
   };
 
@@ -77,13 +84,13 @@ const CreateTaskModal = () => {
   if (!isCreateModalOpen) return null;
 
   return (
-    <Modal open={isCreateModalOpen} onClose={closeCreateModal} className="flex items-center justify-center">
+    <Modal open={isCreateModalOpen} onClose={handleCloseModal} className="flex items-center justify-center">
       <div className="bg-white rounded-3xl shadow-lg w-full max-w-lg" style={{ maxWidth: "900px", width: "90%" }}>
         <div className="flex justify-between items-center p-4 border-b border-gray-300 rounded-t-3xl bg-white sticky top-0 z-10">
           <Typography variant="h6" className="text-center mb-4">
             Create Task
           </Typography>
-          <button onClick={closeCreateModal} className="text-gray-500 hover:text-gray-700">
+          <button onClick={handleCloseModal} className="text-gray-500 hover:text-gray-700">
             <Close />
           </button>
         </div>
@@ -257,7 +264,7 @@ const CreateTaskModal = () => {
         </div>
 
         <div className="flex justify-end bg-[#F1F1F1] p-4 rounded-b-3xl sticky bottom-0 z-10">
-          <button onClick={closeCreateModal} className="bg-[#ffffff] border text-black text-sm font-medium px-7 py-3 rounded-3xl mr-2">
+          <button onClick={handleCloseModal} className="bg-[#ffffff] border text-black text-sm font-medium px-7 py-3 rounded-3xl mr-2">
             CANCEL
           </button>
           <button onClick={handleCreate} className="bg-[#7B1984] text-white text-sm font-medium px-7 py-3 rounded-3xl mr-2">
