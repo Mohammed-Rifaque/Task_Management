@@ -1,10 +1,10 @@
 import React from "react";
-import Page from "./pages/Page";
+import { Outlet } from "react-router-dom";
 
 const Main = () => {
   return (
     <div className="px-10">
-      <Page />
+      <Outlet /> 
     </div>
   );
 };
