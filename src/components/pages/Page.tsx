@@ -46,7 +46,7 @@ const Page = () => {
                 className={`${
                   pageType === type ? "active border-b-2 text-gray-900 font-medium border-gray-500" : "border-transparent"
                 } flex items-center justify-center rounded-t-lg hover:text-gray-500 hover:border-gray-500 dark:hover:text-gray-500 group`}
-                aria-label={`Switch to ${label} view`} // Added for accessibility
+                aria-label={`Switch to ${label} view`} 
               >
                 <img src={icon} alt={`${label} view icon`} className="w-5 h-5" />
                 <span className="mx-2">{label}</span>
