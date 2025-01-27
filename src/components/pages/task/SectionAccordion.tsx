@@ -390,9 +390,9 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
                   vertical: "bottom",
                   horizontal: "left"
                 }}>
-                <MenuItem onClick={() => handleStatusSelect("TO-DO")}>TO-DO</MenuItem>
-                <MenuItem onClick={() => handleStatusSelect("IN-PROGRESS")}>IN-PROGRESS</MenuItem>
-                <MenuItem onClick={() => handleStatusSelect("COMPLETED")}>COMPLETED</MenuItem>
+                <MenuItem onClick={() => handleSelectStatus("TO-DO")}>TO-DO</MenuItem>
+                <MenuItem onClick={() => handleSelectStatus("IN-PROGRESS")}>IN-PROGRESS</MenuItem>
+                <MenuItem onClick={() => handleSelectStatus("COMPLETED")}>COMPLETED</MenuItem>
               </Menu>
 
               <Button onClick={handleDeleteSelected} variant="outlined" color="error" sx={{ borderRadius: "32px" }}>
