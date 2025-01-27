@@ -113,7 +113,7 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
   };
   const handleSelectStatus = (status: string) => {
     setSelectStatus(status);
-    setStatusDropdownOpen(false);
+    setSelectStatusDropdownOpen(false);
   };
 
   const handleCategorySelect = (category: string) => {
