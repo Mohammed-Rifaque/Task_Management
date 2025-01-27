@@ -42,10 +42,15 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
   const [showAddRow, setShowAddRow] = useState(false);
   const [taskTitle, setTaskTitle] = useState<string>("");
   const statusButtonRef = useRef<HTMLButtonElement | null>(null);
+  const statusButtonRefs = useRef<HTMLButtonElement | null>(null);
+  const statusSelectButtonRefs = useRef<HTMLButtonElement | null>(null);
+
   const categoryButtonRef = useRef<HTMLButtonElement | null>(null);
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+  const [selectStatusDropdownOpen, setSelectStatusDropdownOpen] = useState(false);
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
+  const [selectStatus, setSelectStatus] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [actionDropDown, setActionDropDown] = useState<{ [key: number]: boolean }>({});
   const [selectedTasks, setSelectedTasks] = useState<number[]>([]);
@@ -53,6 +58,7 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
   const actionButtonRefs = useRef<{ [key: number]: React.RefObject<HTMLButtonElement | null> }>({});
 
   const handleStatusClick = () => setStatusDropdownOpen((prev) => !prev);
+  const handleStatusSelectClick = () => setSelectStatusDropdownOpen((prev) => !prev);
   const handleCategoryClick = () => setCategoryDropdownOpen((prev) => !prev);
 
   const handleAddTask = () => {
@@ -71,6 +77,7 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
       setTaskTitle("");
       setValue(null);
       setSelectedStatus("");
+      setSelectStatus("");
       setSelectedCategory("");
       console.log("Task added:", newTask);
     } else {
@@ -102,6 +109,10 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
 
   const handleStatusSelect = (status: string) => {
     setSelectedStatus(status);
+    setStatusDropdownOpen(false);
+  };
+  const handleSelectStatus = (status: string) => {
+    setSelectStatus(status);
     setStatusDropdownOpen(false);
   };
 
@@ -343,16 +354,16 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
               <img src={TasksSelectIcon} alt="selectedIcon" className="w-8" />
             </div>
             <div className="flex gap-4">
-              {selectedStatus ? (
+              {selectStatus ? (
                 <Typography>
                   <Button
                     className="flex items-center"
                     style={{ border: "1px solid white", color: "white" }}
                     variant="outlined"
                     sx={{ borderRadius: "32px", padding: "6px 16px" }}
-                    onClick={handleStatusClick}
-                    ref={statusButtonRef}>
-                    {selectedStatus}
+                    onClick={handleStatusSelectClick}
+                    ref={statusSelectButtonRefs}>
+                    {selectStatus}
                   </Button>
                 </Typography>
               ) : (
@@ -361,15 +372,15 @@ export const SectionAccordion = ({ status, tasks, expanded, onAccordionChange, b
                   style={{ border: "1px solid white", color: "white" }}
                   variant="outlined"
                   sx={{ borderRadius: "32px", padding: "6px 16px" }}
-                  onClick={handleStatusClick}
-                  ref={statusButtonRef}>
+                  onClick={handleStatusSelectClick}
+                  ref={statusSelectButtonRefs}>
                   Status
                 </Button>
               )}
               <Menu
-                open={statusDropdownOpen}
-                onClose={() => setStatusDropdownOpen(false)}
-                anchorEl={statusButtonRef.current}
+                open={selectStatusDropdownOpen}
+                onClose={() => setSelectStatusDropdownOpen(false)}
+                anchorEl={statusSelectButtonRefs.current}
                 sx={{ top:"-5%", "& .MuiPaper-root": { borderRadius: "12px", background: "#1A1C20", color: "white", } }}
                 anchorOrigin={{
                   vertical: "top",
