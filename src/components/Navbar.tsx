@@ -21,14 +21,14 @@ const Navbar = () => {
     localStorage.removeItem("userProfilePic");
     navigate("/signin");
   };
-
   return (
-    <div className="flex justify-between items-center px-6 md:px-10 py-4 bg-white shadow-md">
+    <div className="flex justify-between items-center px-6 md:px-10 py-4 bg-white">
       <div className="flex items-center gap-2 sm:gap-3">
         <img src={taskBuddyLogo} alt="TaskBuddy Logo" className="w-7 h-7 sm:w-8 sm:h-8" />
         <h1 className="text-xl sm:text-2xl font-semibold text-black">TaskBuddy</h1>
       </div>
 
+      <div className="flex gap-3">
       <div className="relative">
         <div className="flex items-center gap-2 cursor-pointer" onClick={handleProfileClick}>
           <img
@@ -50,6 +50,7 @@ const Navbar = () => {
             </button>
           </div>
         )}
+      </div>
       </div>
     </div>
   );
